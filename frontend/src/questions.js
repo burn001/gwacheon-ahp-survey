@@ -95,7 +95,7 @@ export const sections = [
     id: 'partB',
     title: 'PART B. 4대 진단영역 상대 중요도 (AHP)',
     subtitle: `
-      <p>평가체계는 <strong>4대 진단영역</strong>과 그 아래 <strong>8개 현장진단 분야</strong>로 구성됩니다. 응답 전 아래 정의를 확인해 주십시오.</p>
+      <p>평가체계는 <strong>4대 진단영역</strong>과 그 아래 <strong>8개 진단분야</strong>로 구성됩니다. 응답 전 아래 정의를 확인해 주십시오.</p>
       <div class="intro-card">
         <ul>
           <li><strong>안전성</strong> · "지금 위험한가" — ① 구조 및 외피 적응성, ② 안전 및 리스크</li>
