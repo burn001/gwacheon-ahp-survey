@@ -217,7 +217,7 @@ async def list_participants(
 
 class EmailSendRequest(BaseModel):
     tokens: list[str]
-    subject: str = "건축 분야 AI 설문조사 참여 요청 (AURI)"
+    subject: str = "노후 정부청사 종합진단 평가체계 전문가 조사 참여 요청 (AURI)"
 
 
 @router.post("/email/preview", response_class=HTMLResponse)
