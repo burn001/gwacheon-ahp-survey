@@ -17,6 +17,7 @@ class PreviewEngine extends SurveyEngine {
     this.gate = 'open';
     this.currentPage = 0;
     this.render();
+    window.__engine = this; // 캡쳐/디버깅용 (미리보기 전용)
   }
 
   // 제출은 서버로 보내지 않고 완료 화면만

@@ -631,7 +631,7 @@ export class SurveyEngine {
 
         <div class="intro-card">
           <h2>연구 소개</h2>
-          <p>건축공간연구원(AURI)은 준공 40년을 넘긴 정부과천청사를 대상으로, 노후 청사를 "고쳐 쓸 것인가, 다시 지을 것인가"를 판단하기 위한 <strong>종합진단 평가체계</strong>를 연구하고 있습니다. 평가체계는 <strong>안전성·노후도·경제성·사용성의 4대 진단영역</strong>과 그 아래 <strong>8개 진단분야</strong>, 분야별 <strong>4개 세부평가항목</strong>(총 32개)으로 구성됩니다.</p>
+          <p>건축공간연구원(AURI)은 준공 40년을 넘긴 정부과천청사를 대상으로, 노후 청사를 "고쳐 쓸 것인가, 다시 지을 것인가"를 판단하기 위한 <strong>종합진단 평가체계</strong>를 연구하고 있습니다. 평가체계는 <strong>안전성·쾌적성·경제성·사용성의 4대 진단영역</strong>과 그 아래 <strong>8개 진단분야</strong>, 분야별 <strong>4개 세부평가항목</strong>(총 32개)으로 구성됩니다.</p>
           <p style="margin-top:10px">본 조사에서는 두 가지를 여쭙습니다.</p>
           <ul style="margin-top:6px">
             <li><strong>가중치(AHP)</strong> — 4대 영역과 영역 내 분야의 상대적 중요도를 쌍대비교로 응답하시면, 계층분석법(AHP)으로 평가체계의 가중치가 확정됩니다.</li>
