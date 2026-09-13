@@ -20,7 +20,7 @@ services:
     security_opt:
       - no-new-privileges:true
     networks:
-      - mongodb
+      - survey
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
@@ -30,6 +30,7 @@ services:
       start_period: 10s
 
 networks:
-  mongodb:
+  # 설문 전용 mongod-survey가 붙은 네트워크 (2026-09-12 ALRIS 공유 docker_search-community에서 분리)
+  survey:
     external: true
-    name: docker_search-community
+    name: survey-net

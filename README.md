@@ -14,7 +14,7 @@
 | 관리자 | https://burn001.github.io/gwacheon-ahp-survey/admin/ (ADMIN_KEY 입력) |
 | API | https://alris.ddns.net:8443/gwacheon-ahp/api/* |
 | 포트 | 8005 (winserver), 컨테이너 `gwacheon-ahp-survey-api` |
-| DB | `gwacheon_ahp_survey` (winserver mongod) |
+| DB | `gwacheon_ahp_survey` (winserver 설문 전용 `mongod-survey`, 네트워크 `survey-net`. 2026-09-12 ALRIS 공유 mongod에서 이관) |
 | 문항 버전 | v1-260816 |
 
 ## 배포
