@@ -3,6 +3,7 @@ frontend/dist/
 backend/__pycache__/
 backend/*.pyc
 backend/.env
+secrets/
 backend/logs/
 .venv/
 venv/

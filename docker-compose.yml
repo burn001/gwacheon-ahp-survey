@@ -12,6 +12,10 @@ services:
       - ./backend/.env
     environment:
       - TZ=Asia/Seoul
+      # DB 연결 문자열은 .env가 아니라 compose secrets 파일에서 읽는다(config.py _mongodb_uri).
+      - MONGODB_URI_FILE=/run/secrets/mongodb_uri
+    secrets:
+      - mongodb_uri
     volumes:
       - ./backend/logs:/app/logs:rw
     read_only: true
@@ -28,6 +32,12 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
+
+secrets:
+  # 서버에만 있는 파일(git 제외 · ACL Administrators·SYSTEM·운영 계정). 내용은 시크릿 저장소의
+  # mongodb/apps/gwacheon_ahp_survey.container.uri와 같은 한 줄이다.
+  mongodb_uri:
+    file: ./secrets/mongodb_uri
 
 networks:
   # 설문 전용 mongod-survey가 붙은 네트워크 (2026-09-12 ALRIS 공유 docker_search-community에서 분리)
