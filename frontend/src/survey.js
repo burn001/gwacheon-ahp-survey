@@ -115,7 +115,7 @@ export class SurveyEngine {
 
         <div class="intro-card">
           <h2>응답자 정보</h2>
-          <p>본 조사는 건축공간연구원이 수행 중인 <strong>「정부과천청사 중장기적 개선방안 연구」</strong>의 일환으로, 노후 정부청사의 <strong>리모델링·재건축 의사결정을 위한 종합진단 평가체계</strong>의 가중치와 세부평가항목을 전문가 합의로 확정하기 위한 조사입니다. 응답 전 아래 정보를 입력해 주십시오.</p>
+          <p>본 조사는 건축공간연구원이 수행 중인 <strong>노후 정부청사 종합진단 평가체계 연구</strong>의 일환으로, 노후 정부청사의 <strong>리모델링·재건축 의사결정을 위한 종합진단 평가체계</strong>의 가중치와 세부평가항목을 전문가 합의로 확정하기 위한 조사입니다. 응답 전 아래 정보를 입력해 주십시오.</p>
           <p style="margin-top:10px">입력하신 정보는 <strong>응답 확인·수정 및 결과 안내</strong>에만 사용되며, 분석 결과는 통계 처리되어 익명으로만 공표됩니다.</p>
         </div>
 
@@ -173,7 +173,8 @@ export class SurveyEngine {
           <dl class="intro-meta">
             <dt>소요 시간</dt><dd>${m.duration}</dd>
             <dt>비밀보장</dt><dd>모든 응답은 통계 처리 후 익명 활용</dd>
-            <dt>연구책임</dt><dd>${m.researcher} (${m.contact})</dd>
+            <dt>연구책임</dt><dd>${m.researcher}</dd>
+            <dt>문의</dt><dd>${m.contact}</dd>
           </dl>
         </div>
       </div>
@@ -631,7 +632,7 @@ export class SurveyEngine {
 
         <div class="intro-card">
           <h2>연구 소개</h2>
-          <p>건축공간연구원(AURI)은 준공 40년을 넘긴 정부과천청사를 대상으로, 노후 청사를 "고쳐 쓸 것인가, 다시 지을 것인가"를 판단하기 위한 <strong>종합진단 평가체계</strong>를 연구하고 있습니다. 평가체계는 <strong>안전성·쾌적성·경제성·사용성의 4대 진단영역</strong>과 그 아래 <strong>8개 진단분야</strong>, 분야별 <strong>4개 세부평가항목</strong>(총 32개)으로 구성됩니다.</p>
+          <p>건축공간연구원(AURI)은 정부청사 건축물을 대상으로, 노후 청사를 "고쳐 쓸 것인가, 다시 지을 것인가"를 판단하기 위한 <strong>종합진단 평가체계</strong>를 연구하고 있습니다. 평가체계는 <strong>안전성·쾌적성·경제성·사용성의 4대 진단영역</strong>과 그 아래 <strong>8개 진단분야</strong>, 분야별 <strong>4개 세부평가항목</strong>(총 32개)으로 구성됩니다.</p>
           <p style="margin-top:10px">본 조사에서는 두 가지를 여쭙습니다.</p>
           <ul style="margin-top:6px">
             <li><strong>가중치(AHP)</strong> — 4대 영역과 영역 내 분야의 상대적 중요도를 쌍대비교로 응답하시면, 계층분석법(AHP)으로 평가체계의 가중치가 확정됩니다.</li>
@@ -651,7 +652,8 @@ export class SurveyEngine {
           <dl class="intro-meta">
             <dt>소요 시간</dt><dd>${m.duration}</dd>
             <dt>비밀보장</dt><dd>모든 응답은 통계 처리 후 익명 활용</dd>
-            <dt>연구책임</dt><dd>${m.researcher} (${m.contact})</dd>
+            <dt>연구책임</dt><dd>${m.researcher}</dd>
+            <dt>문의</dt><dd>${m.contact}</dd>
           </dl>
         </div>
 
