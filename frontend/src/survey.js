@@ -1142,7 +1142,8 @@ export class SurveyEngine {
           this.collectAhp(q.id);
         }
       } else if (q.type === Q_TYPE.TEXT) {
-        const el = this.container.querySelector(`[data-qid="${q.id}"]`);
+        // .question-block 래퍼도 같은 data-qid를 가지므로 입력 요소로 한정한다.
+        const el = this.container.querySelector(`.text-input[data-qid="${q.id}"]`);
         if (el) el.value = val;
       } else if (q.type === Q_TYPE.SINGLE || q.type === Q_TYPE.SINGLE_WITH_OTHER) {
         const list = this.container.querySelector(`.option-list[data-qid="${q.id}"]`);
