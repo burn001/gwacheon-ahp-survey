@@ -1,7 +1,7 @@
 import re
 
 from fastapi import APIRouter, Request, HTTPException
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from models import ResponseSubmit, ResponseRecord, ParticipantUpdate, SelfRegisterRequest
 from services.db import get_db
 from services.token_service import generate_token
@@ -10,6 +10,21 @@ from config import get_settings
 router = APIRouter(prefix="/api", tags=["responses"])
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
+KST = timezone(timedelta(hours=9))
+
+
+def is_closed(participant: dict) -> bool:
+    """수동 마감(closed) 또는 개별 응답 기한(deadline, 'YYYY-MM-DD', 해당일 KST 24시까지)이 지났으면 마감."""
+    if participant.get("closed"):
+        return True
+    deadline = participant.get("deadline")
+    if not deadline:
+        return False
+    try:
+        end = datetime.strptime(deadline, "%Y-%m-%d").replace(tzinfo=KST) + timedelta(days=1)
+    except ValueError:
+        return False
+    return datetime.now(KST) >= end
 
 
 async def _participant_payload(db, participant: dict) -> dict:
@@ -26,6 +41,9 @@ async def _participant_payload(db, participant: dict) -> dict:
         "phone": participant.get("phone", ""),
         "source": participant.get("source", "import"),
         "has_responded": existing is not None,
+        # 개별 마감: 기한이 지나 응답을 받지 않는 참가자
+        "closed": is_closed(participant),
+        "deadline": participant.get("deadline", ""),
         "responses": existing.get("responses") if existing else None,
         "submitted_at": existing.get("submitted_at").isoformat() if existing and existing.get("submitted_at") else None,
         "updated_at": existing.get("updated_at").isoformat() if existing and existing.get("updated_at") else None,
@@ -164,6 +182,8 @@ async def submit_response(body: ResponseSubmit, request: Request):
     participant = await db.participants.find_one({"token": body.token})
     if not participant:
         raise HTTPException(404, "유효하지 않은 토큰입니다.")
+    if is_closed(participant):
+        raise HTTPException(403, "응답 기간이 종료된 설문입니다.")
 
     now = datetime.utcnow()
     ip = request.client.host if request.client else ""

@@ -40,6 +40,41 @@ async def set_test_flag(
     return {"status": "updated", "token": token, "is_test": is_test}
 
 
+class DeadlineRequest(BaseModel):
+    tokens: list[str]
+    deadline: Optional[str] = None  # 'YYYY-MM-DD' (KST 해당일 24시 마감), 빈 값이면 기한 해제
+    closed: Optional[bool] = None   # 기한과 무관한 즉시 마감/해제
+
+
+@router.post("/participants/deadline")
+async def set_deadline(body: DeadlineRequest, x_admin_key: Optional[str] = Header(None)):
+    """참가자별 응답 기한·마감을 일괄 설정한다. 마감된 링크는 종료 안내 화면을 띄우고 제출을 거부한다."""
+    _check_admin(x_admin_key)
+    fields = {}
+    unset = {}
+    if body.deadline is not None:
+        if body.deadline:
+            try:
+                datetime.strptime(body.deadline, "%Y-%m-%d")
+            except ValueError:
+                raise HTTPException(400, "deadline은 YYYY-MM-DD 형식이어야 합니다.")
+            fields["deadline"] = body.deadline
+        else:
+            unset["deadline"] = ""
+    if body.closed is not None:
+        fields["closed"] = body.closed
+    if not fields and not unset:
+        raise HTTPException(400, "deadline 또는 closed 중 하나는 지정해야 합니다.")
+    update = {}
+    if fields:
+        update["$set"] = fields
+    if unset:
+        update["$unset"] = unset
+    db = get_db()
+    result = await db.participants.update_many({"token": {"$in": body.tokens}}, update)
+    return {"matched": result.matched_count, "modified": result.modified_count}
+
+
 @router.get("/stats")
 async def get_stats(x_admin_key: Optional[str] = Header(None)):
     _check_admin(x_admin_key)

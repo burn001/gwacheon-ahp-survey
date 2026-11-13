@@ -9,6 +9,7 @@ const GATE = {
   LOADING: 'loading',
   REGISTER: 'register',
   DENIED: 'denied',
+  CLOSED: 'closed',
   RESUBMIT_CHOICE: 'resubmit_choice',
   READ_ONLY: 'read_only',
   OPEN: 'open',
@@ -73,6 +74,10 @@ export class SurveyEngine {
     localStorage.setItem(STORAGE_TOKEN_KEY, data.token);
     this.submittedAt = data.submitted_at || null;
     this.updatedAt = data.updated_at || null;
+    if (data.closed) {
+      this.gate = GATE.CLOSED;
+      return;
+    }
     if (data.has_responded && data.responses) {
       // 서버에 저장된 응답도 이전 판본일 수 있으므로 동일하게 정리한다.
       this.responses = { ...this.responses, ...this.sanitizeResponses(data.responses) };
@@ -302,6 +307,10 @@ export class SurveyEngine {
       this.renderAccessDenied();
       return;
     }
+    if (this.gate === GATE.CLOSED) {
+      this.renderClosed();
+      return;
+    }
     if (this.gate === GATE.RESUBMIT_CHOICE) {
       this.renderResubmitChoice();
       return;
@@ -326,6 +335,35 @@ export class SurveyEngine {
           <div class="spinner"></div>
           <style>@keyframes spin{to{transform:rotate(360deg)}}.spinner{width:40px;height:40px;border:3px solid #e0e0e0;border-top:3px solid #2c2c2c;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 24px}</style>
           <p style="color:var(--c-text-secondary)">설문 링크를 확인 중입니다…</p>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Closed (개별 마감) ──
+  renderClosed() {
+    const m = SURVEY_META;
+    const p = this.participant || {};
+    const name = p.name ? `${this.escape(p.name)} 님, ` : '';
+    const msg = p.has_responded
+      ? `${name}응답해 주셔서 진심으로 감사드립니다.<br/>
+            본 조사는 응답 기한이 지나 마감되었으며, 제출하신 응답은 안전하게 저장되어 있습니다.`
+      : `본 조사는 응답 기한이 지나 더 이상 응답을 받지 않습니다.<br/>
+            관심 가져 주셔서 감사합니다.`;
+    this.container.innerHTML = `
+      <div class="survey-container">
+        <div class="access-denied">
+          <h1>설문 응답 기간이 종료되었습니다</h1>
+          <p class="access-denied-msg">
+            ${msg}
+          </p>
+          <div class="access-denied-meta">
+            <dl>
+              <dt>조사기관</dt><dd>${m.institution}</dd>
+              <dt>연구책임</dt><dd>${m.researcher}</dd>
+              <dt>문의</dt><dd>${m.contact}</dd>
+            </dl>
+          </div>
         </div>
       </div>
     `;
