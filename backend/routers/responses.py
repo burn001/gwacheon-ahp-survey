@@ -27,6 +27,17 @@ def is_closed(participant: dict) -> bool:
     return datetime.now(KST) >= end
 
 
+async def survey_closed(db) -> bool:
+    """설문 전체 마감 스위치(settings 컬렉션 _id='survey'). 관리자 API로 켜고 끈다."""
+    doc = await db.settings.find_one({"_id": "survey"})
+    return bool(doc and doc.get("closed"))
+
+
+@router.get("/status")
+async def survey_status():
+    return {"closed": await survey_closed(get_db())}
+
+
 async def _participant_payload(db, participant: dict) -> dict:
     token = participant["token"]
     existing = await db.responses.find_one({"token": token}, {"_id": 0})
@@ -42,7 +53,7 @@ async def _participant_payload(db, participant: dict) -> dict:
         "source": participant.get("source", "import"),
         "has_responded": existing is not None,
         # 개별 마감: 기한이 지나 응답을 받지 않는 참가자
-        "closed": is_closed(participant),
+        "closed": is_closed(participant) or await survey_closed(db),
         "deadline": participant.get("deadline", ""),
         "responses": existing.get("responses") if existing else None,
         "submitted_at": existing.get("submitted_at").isoformat() if existing and existing.get("submitted_at") else None,
@@ -67,6 +78,8 @@ async def self_register(body: SelfRegisterRequest):
         raise HTTPException(400, "개인정보 수집·이용에 동의해 주셔야 참여하실 수 있습니다.")
 
     db = get_db()
+    if await survey_closed(db):
+        raise HTTPException(403, "응답 기간이 종료된 설문입니다.")
     token = generate_token(email, get_settings().TOKEN_SECRET)
     now = datetime.utcnow()
 
@@ -182,7 +195,7 @@ async def submit_response(body: ResponseSubmit, request: Request):
     participant = await db.participants.find_one({"token": body.token})
     if not participant:
         raise HTTPException(404, "유효하지 않은 토큰입니다.")
-    if is_closed(participant):
+    if is_closed(participant) or await survey_closed(db):
         raise HTTPException(403, "응답 기간이 종료된 설문입니다.")
 
     now = datetime.utcnow()

@@ -44,7 +44,17 @@ export class SurveyEngine {
     if (this.token) {
       this.verifyToken().then(() => this.render());
     } else {
-      this.render();
+      this.checkSurveyClosed().then(() => this.render());
+    }
+  }
+
+  // 토큰 없는 공개 링크 진입 시 전체 마감 여부 확인
+  async checkSurveyClosed() {
+    try {
+      const res = await fetch(`${API_BASE}/api/status`);
+      if (res.ok && (await res.json()).closed) this.gate = GATE.CLOSED;
+    } catch {
+      // 확인 실패 시 자기등록 화면 유지(제출은 서버가 거부)
     }
   }
 

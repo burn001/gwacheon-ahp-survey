@@ -75,6 +75,19 @@ async def set_deadline(body: DeadlineRequest, x_admin_key: Optional[str] = Heade
     return {"matched": result.matched_count, "modified": result.modified_count}
 
 
+@router.post("/survey/closed")
+async def set_survey_closed(closed: bool = True, x_admin_key: Optional[str] = Header(None)):
+    """설문 전체 마감/재개. 마감 시 모든 링크(개인·공개)에 종료 안내, 제출·자기등록 거부."""
+    _check_admin(x_admin_key)
+    db = get_db()
+    await db.settings.update_one(
+        {"_id": "survey"},
+        {"$set": {"closed": closed, "updated_at": datetime.now(timezone.utc)}},
+        upsert=True,
+    )
+    return {"closed": closed}
+
+
 @router.get("/stats")
 async def get_stats(x_admin_key: Optional[str] = Header(None)):
     _check_admin(x_admin_key)
