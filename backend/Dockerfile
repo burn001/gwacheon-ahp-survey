@@ -4,7 +4,10 @@ RUN groupadd -r survey && useradd -r -g survey survey
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl && \
+# 기반 이미지가 Debian 보안 수정을 늦게 싣는다. 빌드 때 apt 보안 판까지 올린다
+# (2026-11-19 zlib +deb13u1 — Docker Hub python:3.13-slim에는 아직 없다).
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
